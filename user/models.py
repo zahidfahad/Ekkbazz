@@ -24,16 +24,16 @@ class User(AbstractUser):
 class Business(models.Model):
     business_name = models.CharField(verbose_name=_("Business Name"),max_length=50)
     place_name = models.CharField(verbose_name=_("Place Name"),max_length=70)
-    latitude = models.DecimalField(max_digits=30, decimal_places=25,blank=True,null=True,verbose_name=_("Latitude"))
-    longitude = models.DecimalField(max_digits=30, decimal_places=25,blank=True,null=True,verbose_name=_("Longitude"))
+    latitude = models.DecimalField(max_digits=30,null=True,decimal_places=25,verbose_name=_("Latitude"))
+    longitude = models.DecimalField(max_digits=30,null=True,decimal_places=25,verbose_name=_("Longitude"))
 
     def __str__(self):
         return self.business_name
     
     @staticmethod
-    def nearby(latitude=None, longitude=None, distance_range=None):
+    def nearby(latitude, longitude, distance_range):
         queryset = Business.objects.all()
-        if not (latitude or longitude or distance_range):
+        if not (latitude and longitude and distance_range):
             return queryset.none()
         
         latitude       = float(latitude)
@@ -58,3 +58,5 @@ class Business(models.Model):
         verbose_name_plural = "Business"
         default_permissions = ()
         permissions = ()
+        
+   

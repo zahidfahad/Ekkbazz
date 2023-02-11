@@ -66,7 +66,13 @@ class BusinessView(APIView, ListPagination):
         queryset = Business.nearby(latitude,longitude,2000)
         paginated_queryset = self.paginate_queryset(queryset,request=request)
         self.message = _("Business List")
-        return self.get_paginated_response(self.message,paginated_queryset)
+        return self.get_paginated_response(
+            self.message,
+            self.serializer_class(
+                paginated_queryset,many=True,
+                context={"request":request}
+            ).data
+        )
     
     
 class HomeView(TemplateView):

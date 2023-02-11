@@ -7,6 +7,13 @@ services:
           - static_dir:/app/static
           - ./media:/media
           - .:/app
+      environment:
+          - DATABASE_URL=postgres://postgres:postgres@db:5432/ekkbazz_database
+          - DATABASE_NAME=ekkbazz_database
+          - DATABASE_USER=admin
+          - DATABASE_PASSWORD=admin
+          - DATABASE_HOST=db
+          - DATABASE_PORT=5432
 
   web:
       <<: *worker
@@ -19,6 +26,20 @@ services:
       expose:
           - "8001:8001"
       restart: always
+      depends_on:
+          - db
+
+  db:
+      image: postgres:14.1
+      environment:
+          - POSTGRES_USER=${DATABASE_USER:-admin}
+          - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-admin}
+          - POSTGRES_DB=ekkbazz_database
+          - PGDATA=/var/lib/postgresql/data/pgdata
+      volumes:
+          - pgdata:/var/lib/postgresql/data/pgdata
+      ports:
+          - "5432:5432"
 
 
   nginx:
@@ -34,3 +55,4 @@ services:
 
 volumes:
   static_dir:
+  pgdata:

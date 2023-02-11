@@ -87,6 +87,9 @@ class AuthTokenSerializer(serializers.Serializer):
     
 
 class BusinessSerializer(serializers.ModelSerializer):
+    latitude = serializers.DecimalField(max_digits=30,decimal_places=25,required=True)
+    longitude = serializers.DecimalField(max_digits=30,decimal_places=25,required=True)
+    
     class Meta:
         model = Business
         fields = '__all__'
